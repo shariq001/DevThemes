@@ -54,8 +54,8 @@ export default function Navbar() {
       </AnimatePresence>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo Container - Fixed width prevents nav links from shifting during logo animation */}
-          <div className="flex-shrink-0 w-[240px] flex items-center">
+          {/* Logo Container - Responsive width to allow hamburger menu on small screens */}
+          <div className="flex-shrink-0 w-auto md:w-[240px] flex items-center">
             <Link href="/" className="flex items-center">
               <DevThemesLogo />
             </Link>

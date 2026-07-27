@@ -21,27 +21,35 @@ export function DevThemesLogo({ animate = true }: DevThemesLogoProps) {
     <div className="flex items-center relative py-2 shrink-0">
       {animate && (
         <style dangerouslySetInnerHTML={{ __html: `
-          @keyframes expandText {
-            0%, 10%, 100% { max-width: 0px; opacity: 0; filter: blur(12px); transform: scale(0.9) translateX(-15px); }
-            25%, 85% { max-width: 160px; opacity: 1; filter: blur(0px); transform: scale(1) translateX(0); }
-          }
-          @keyframes bracketAmbient {
-            0%, 100% { filter: drop-shadow(0 0 2px rgba(220,38,38,0.2)); }
-            50% { filter: drop-shadow(0 0 14px rgba(220,38,38,0.7)); }
-          }
-          @keyframes spinSlow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-          @keyframes spinSlowReverse {
-            from { transform: rotate(360deg); }
-            to { transform: rotate(0deg); }
-          }
-          .animate-reveal {
-            animation: expandText 7s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-          }
-          .animate-bracket {
-            animation: bracketAmbient 3.5s ease-in-out infinite;
+          @media (min-width: 768px) {
+            @keyframes expandText {
+              0%, 10%, 100% { max-width: 0px; opacity: 0; filter: blur(12px); transform: scale(0.9) translateX(-15px); }
+              25%, 85% { max-width: 160px; opacity: 1; filter: blur(0px); transform: scale(1) translateX(0); }
+            }
+            @keyframes bracketAmbient {
+              0%, 100% { filter: drop-shadow(0 0 2px rgba(220,38,38,0.2)); }
+              50% { filter: drop-shadow(0 0 14px rgba(220,38,38,0.7)); }
+            }
+            @keyframes spinSlow {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(360deg); }
+            }
+            @keyframes spinSlowReverse {
+              from { transform: rotate(360deg); }
+              to { transform: rotate(0deg); }
+            }
+            .animate-reveal {
+              animation: expandText 7s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+            }
+            .animate-bracket {
+              animation: bracketAmbient 3.5s ease-in-out infinite;
+            }
+            .animate-spin-slow {
+              animation: spinSlow 12s linear infinite;
+            }
+            .animate-spin-slow-reverse {
+              animation: spinSlowReverse 12s linear infinite;
+            }
           }
         `}} />
       )}
@@ -61,12 +69,12 @@ export function DevThemesLogo({ animate = true }: DevThemesLogoProps) {
           </defs>
           <path d="M45 10 L15 50 L45 90" stroke="url(#logoGradient)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M45 25 L25 50 L45 75" stroke="url(#logoGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
-          <circle cx="15" cy="50" r="3" fill="url(#logoGradient)" className={animate ? 'animate-pulse' : ''} />
+          <circle cx="15" cy="50" r="3" fill="url(#logoGradient)" className="hidden md:block" />
         </svg>
       </div>
 
       {/* Center Icon (Themes Layers) */}
-      <div className={`relative w-8 h-8 mx-3 z-10 shrink-0 ${animate ? 'animate-bracket' : ''}`}>
+      <div className={`relative w-8 h-8 mx-1 md:mx-3 z-10 shrink-0 ${animate ? 'animate-bracket' : ''}`}>
         <svg viewBox="0 0 100 100" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect
             x="20"
@@ -75,8 +83,7 @@ export function DevThemesLogo({ animate = true }: DevThemesLogoProps) {
             height="60"
             rx="12"
             fill="url(#logoGradient)"
-            className="origin-[50px_50px] opacity-90"
-            style={animate ? { animation: 'spinSlow 12s linear infinite' } : { transform: 'rotate(0deg)' }}
+            className={`origin-[50px_50px] opacity-90 ${animate ? 'animate-spin-slow' : 'rotate-0'}`}
           />
           <rect
             x="20"
@@ -85,14 +92,13 @@ export function DevThemesLogo({ animate = true }: DevThemesLogoProps) {
             height="60"
             rx="12"
             fill="url(#glowGradient)"
-            className="origin-[50px_50px] opacity-90 mix-blend-overlay"
-            style={animate ? { animation: 'spinSlowReverse 12s linear infinite' } : { transform: 'rotate(45deg)' }}
+            className={`origin-[50px_50px] opacity-90 mix-blend-overlay ${animate ? 'animate-spin-slow-reverse' : 'rotate-[45deg]'}`}
           />
         </svg>
       </div>
 
       {/* Text Container with continuous expanding/fading animation */}
-      <div className={`${animate ? 'overflow-hidden animate-reveal' : 'max-w-[160px]'} flex items-center justify-center whitespace-nowrap z-10 shrink-0`}>
+      <div className={`hidden md:flex ${animate ? 'overflow-hidden animate-reveal' : 'max-w-[160px]'} items-center justify-center whitespace-nowrap z-10 shrink-0`}>
         <span className="font-heading font-bold text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-foreground to-accent mr-3">
           DevThemes
         </span>
