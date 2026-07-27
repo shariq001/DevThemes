@@ -47,23 +47,10 @@ export async function GET(req: Request) {
       return new NextResponse('File storage not configured', { status: 500 });
     }
 
-    // Securely fetch the public file from Vercel Blob server-side so the URL is never exposed to the client
-    const fileResponse = await fetch(blobUrl);
-    
-    if (!fileResponse.ok) {
-      console.error("Failed to fetch file from Blob storage. Status:", fileResponse.status);
-      return new NextResponse('File not found in storage', { status: 404 });
-    }
-
-    // Stream the file back to the user as a downloadable attachment
-    return new NextResponse(fileResponse.body, {
-      status: 200,
-      headers: {
-        'Content-Disposition': `attachment; filename="${PRODUCT_FILES[productId]}"`,
-        'Content-Type': 'application/zip',
-        'Content-Length': fileResponse.headers.get('content-length') || '',
-      },
-    });
+    // Since these are Public Blobs, the safest and most scalable way to deliver them
+    // on Vercel Production (without hitting the 10-second Serverless Function Timeout)
+    // is to instantly redirect the buyer's browser to the ultra-fast Vercel CDN URL.
+    return NextResponse.redirect(blobUrl);
   } catch (error) {
     console.error('Download API error:', error);
     return new NextResponse('Internal server error', { status: 500 });
