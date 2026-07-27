@@ -79,16 +79,18 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="en"
-        className={`${dmSans.variable} ${spaceGrotesk.variable} h-full antialiased`}
+        className={`${dmSans.variable} ${spaceGrotesk.variable} h-full antialiased overflow-x-hidden`}
         suppressHydrationWarning
       >
         <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-accent/30 relative transition-colors duration-500 ease-in-out overflow-x-hidden">
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <Navbar />
-            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12 z-10 relative">
-              {children}
-            </main>
-            <Footer />
+            <div className="relative w-full overflow-x-hidden flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12 z-10 relative">
+                {children}
+              </main>
+              <Footer />
+            </div>
           </ThemeProvider>
           <Script src="https://app.lemonsqueezy.com/js/lemon.js" strategy="lazyOnload" />
         </body>
