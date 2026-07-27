@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Thread {
+  id        String    @id @default(cuid())
+  userId    String    // Clerk User ID of the client
+  subject   String
+  status    String    @default("OPEN") // OPEN, IN_PROGRESS, AWAITING_REPLY, CLOSED
+  budget    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  threadId  String
+  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  senderId  String   // Clerk User ID or 'ADMIN'
+  content   String
+  createdAt DateTime @default(now())
+}
