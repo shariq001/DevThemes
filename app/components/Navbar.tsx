@@ -89,7 +89,7 @@ export default function Navbar() {
                 <Link href="/dashboard" className="text-sm font-bold tracking-wide text-secondary hover:text-foreground transition-colors">
                   Dashboard
                 </Link>
-                <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "w-9 h-9 border-2 border-accent/20 hover:border-accent transition-colors" } }} />
+                <UserButton appearance={{ elements: { avatarBox: "w-9 h-9 border-2 border-accent/20 hover:border-accent transition-colors" } }} />
               </>
             )}
             <GetTemplatesButton />
@@ -99,7 +99,7 @@ export default function Navbar() {
           <div className="md:hidden flex items-center gap-4">
             <ThemeToggle />
             {isLoaded && isSignedIn && (
-              <UserButton afterSignOutUrl="/" />
+              <UserButton />
             )}
             <button className="text-foreground p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
