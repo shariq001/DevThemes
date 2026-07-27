@@ -27,10 +27,25 @@ export async function POST(req: Request) {
 
     if (eventName === 'order_created') {
       const orderData = data.data.attributes;
-      // TODO: Here you would save the purchase to your database
-      // linking orderData.first_order_item.variant_id to userId
+      const variantId = orderData.first_order_item?.variant_id;
       
-      console.log(`Order created successfully for user ${userId}:`, orderData.identifier);
+      if (userId && variantId) {
+        const { clerkClient } = await import('@clerk/nextjs/server');
+        const client = await clerkClient();
+        const user = await client.users.getUser(userId);
+        const existingPurchases = (user.publicMetadata.purchases as number[]) || [];
+        
+        if (!existingPurchases.includes(variantId)) {
+          await client.users.updateUserMetadata(userId, {
+            publicMetadata: {
+              purchases: [...existingPurchases, variantId]
+            }
+          });
+          console.log(`Granted user ${userId} access to variant ${variantId}`);
+        }
+      }
+      
+      console.log(`Order processed successfully for user ${userId}:`, orderData.identifier);
     }
 
     return NextResponse.json({ message: 'Webhook received' }, { status: 200 });

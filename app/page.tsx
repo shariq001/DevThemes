@@ -21,8 +21,8 @@ export default function Home() {
         <span className="relative z-10 text-foreground transition-colors duration-300 group-hover:text-accent">Premium Multi-Tech Templates</span>
       </div>
       
-      <h1 className="text-6xl md:text-8xl font-bold mb-8 tracking-tighter leading-[1.1] max-w-5xl text-foreground animate-slide-up" style={{ animationDelay: '0.2s' }}>
-        Limitless design for <br/>
+      <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold mb-8 tracking-tighter leading-[1.1] max-w-5xl text-foreground animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        Limitless design for <br className="hidden sm:block" />
         <span className="text-gradient">every technology.</span>
       </h1>
       

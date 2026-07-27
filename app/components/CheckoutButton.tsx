@@ -4,6 +4,12 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter, usePathname } from "next/navigation";
 
+declare global {
+  interface Window {
+    LemonSqueezy: any;
+  }
+}
+
 export default function CheckoutButton({ productId, price }: { productId: string, price: number }) {
   const [loading, setLoading] = useState(false);
   const { isLoaded, isSignedIn, user } = useUser();
@@ -19,26 +25,29 @@ export default function CheckoutButton({ productId, price }: { productId: string
     
     setLoading(true);
     try {
-      const response = await fetch("/api/checkout_sessions", {
+      // ⚠️ DEVELOPMENT MOCK CHECKOUT
+      // Since your Lemon Squeezy store isn't activated yet, this bypasses the payment gateway
+      // and directly simulates a successful purchase so you can test file downloading.
+      const response = await fetch("/api/mock_checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          productId,
-          price,
-          userId: user?.id,
-          userEmail: user?.primaryEmailAddress?.emailAddress,
-          pathname,
+          variantId: productId, 
         }),
       });
 
-      const { url, error } = await response.json();
-      if (error) {
-        throw new Error(error);
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
       }
-      if (url) {
-        window.location.href = url;
+      
+      if (data.success) {
+        alert("Mock Purchase Successful! You now own this template.");
+        router.push("/dashboard");
+        router.refresh();
       }
     } catch (error) {
       console.error(error);
