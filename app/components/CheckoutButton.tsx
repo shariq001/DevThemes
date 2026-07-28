@@ -25,10 +25,7 @@ export default function CheckoutButton({ productId, price }: { productId: string
     
     setLoading(true);
     try {
-      // ⚠️ DEVELOPMENT MOCK CHECKOUT
-      // Since your Lemon Squeezy store isn't activated yet, this bypasses the payment gateway
-      // and directly simulates a successful purchase so you can test file downloading.
-      const response = await fetch("/api/mock_checkout", {
+      const response = await fetch("/api/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,10 +41,14 @@ export default function CheckoutButton({ productId, price }: { productId: string
         throw new Error(data.error);
       }
       
-      if (data.success) {
-        alert("Mock Purchase Successful! You now own this template.");
-        router.push("/dashboard");
-        router.refresh();
+      if (data.checkoutUrl) {
+        if (window.LemonSqueezy) {
+          window.LemonSqueezy.Url.Open(data.checkoutUrl);
+        } else {
+          window.location.href = data.checkoutUrl;
+        }
+      } else {
+         throw new Error("No checkout URL returned");
       }
     } catch (error) {
       console.error(error);

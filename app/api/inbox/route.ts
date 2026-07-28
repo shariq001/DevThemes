@@ -1,16 +1,17 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
+import { Resend } from 'resend';
 
 export async function GET() {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
     // Check if the user is the admin (you should set this in your environment variables)
-    const isAdmin = userId === process.env.ADMIN_CLERK_ID;
+    const isAdmin = userId === process.env.NEXT_PUBLIC_ADMIN_CLERK_ID;
 
     // Fetch threads. If admin, fetch all. If user, fetch only theirs.
     const threads = await prisma.thread.findMany({
@@ -32,7 +33,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -57,6 +58,16 @@ export async function POST(req: Request) {
         }
       }
     });
+
+    if (process.env.RESEND_API_KEY && process.env.ADMIN_EMAIL) {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: 'DevThemes Notifications <noreply@devthemes.com>',
+        to: process.env.ADMIN_EMAIL,
+        subject: `New Project Request: ${subject}`,
+        text: `You have a new project request from a user.\n\nSubject: ${subject}\nBudget: ${budget || 'Not specified'}\nMessage: "${initialMessage}"\n\nLog in to your dashboard to reply.`
+      });
+    }
 
     return NextResponse.json(thread);
   } catch (error) {
