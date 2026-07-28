@@ -1,5 +1,6 @@
 export interface Product {
   id: string;
+  variantId: string; // The Lemon Squeezy Variant ID
   title: string;
   slug: string;
   description: string;
@@ -14,6 +15,7 @@ export interface Product {
 export const products: Product[] = [
   {
     id: "prod_001",
+    variantId: process.env.NEXT_PUBLIC_LS_VARIANT_SAAS || "123456",
     title: "SaaS Pro Dashboard",
     slug: "saas-pro-dashboard",
     description: "A comprehensive, highly-converting SaaS dashboard template built with Next.js App Router, Tailwind CSS, and Recharts.",
@@ -26,6 +28,7 @@ export const products: Product[] = [
   },
   {
     id: "prod_002",
+    variantId: process.env.NEXT_PUBLIC_LS_VARIANT_ECOM || "123457",
     title: "E-Commerce Storefront UI",
     slug: "e-commerce-storefront-ui",
     description: "Premium headless e-commerce storefront with shopping cart, Stripe integration, and complex product filtering.",
@@ -38,6 +41,7 @@ export const products: Product[] = [
   },
   {
     id: "prod_003",
+    variantId: process.env.NEXT_PUBLIC_LS_VARIANT_FIGMA || "123458",
     title: "DevThemes Figma Design System",
     slug: "devthemes-figma-system",
     description: "The complete Figma design system used to build all DevThemes templates. Includes 500+ components and auto-layout.",
@@ -49,6 +53,7 @@ export const products: Product[] = [
   },
   {
     id: "prod_004",
+    variantId: process.env.NEXT_PUBLIC_LS_VARIANT_PORTFOLIO || "123459",
     title: "Minimalist Blog & Portfolio",
     slug: "minimalist-blog-portfolio",
     description: "A fast, content-focused portfolio template with MDX blog support and seamless MDX reading experience.",
@@ -61,6 +66,7 @@ export const products: Product[] = [
   },
   {
     id: "prod_005",
+    variantId: process.env.NEXT_PUBLIC_LS_VARIANT_WP || "123460",
     title: "WordPress Agency Theme",
     slug: "wordpress-agency-theme",
     description: "A blazing fast headless WordPress starter theme bridging the gap between traditional CMS and modern Next.js frontends.",

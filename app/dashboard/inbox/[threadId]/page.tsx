@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
@@ -20,7 +20,8 @@ type Thread = {
   messages: Message[];
 };
 
-export default function ThreadPage({ params }: { params: { threadId: string } }) {
+export default function ThreadPage({ params }: { params: Promise<{ threadId: string }> }) {
+  const resolvedParams = use(params);
   const [thread, setThread] = useState<Thread | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
@@ -29,7 +30,7 @@ export default function ThreadPage({ params }: { params: { threadId: string } })
 
   const fetchThread = async () => {
     try {
-      const res = await fetch(`/api/inbox/${params.threadId}`);
+      const res = await fetch(`/api/inbox/${resolvedParams.threadId}`);
       if (res.ok) {
         setThread(await res.json());
       }
@@ -43,7 +44,7 @@ export default function ThreadPage({ params }: { params: { threadId: string } })
     // Poll for new messages every 5 seconds
     const interval = setInterval(fetchThread, 5000);
     return () => clearInterval(interval);
-  }, [isLoaded, params.threadId]);
+  }, [isLoaded, resolvedParams.threadId]);
 
   useEffect(() => {
     // Scroll to bottom when messages change
@@ -59,7 +60,7 @@ export default function ThreadPage({ params }: { params: { threadId: string } })
       const res = await fetch("/api/inbox/message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ threadId: params.threadId, content: newMessage }),
+        body: JSON.stringify({ threadId: resolvedParams.threadId, content: newMessage }),
       });
 
       if (res.ok) {

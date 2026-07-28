@@ -2,19 +2,27 @@ import { auth, clerkClient } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
 
-// Mock database to map purchased IDs to display data
+// Mock database to map purchased Lemon Squeezy Variant IDs to display data
 const PRODUCT_CATALOG: Record<string, any> = {
-  'prod_001': {
+  [process.env.NEXT_PUBLIC_LS_VARIANT_SAAS || "123456"]: {
     name: 'SaaS Pro Dashboard',
     description: 'High-converting dark mode SaaS template.',
+    downloadUrl: process.env.BLOB_URL_SAAS || '#',
   },
-  'prod_002': {
+  [process.env.NEXT_PUBLIC_LS_VARIANT_ECOM || "123457"]: {
     name: 'E-Commerce Storefront UI',
     description: 'Minimalist fashion and lifestyle storefront.',
+    downloadUrl: process.env.BLOB_URL_ECOM || '#',
   },
-  'prod_004': {
+  [process.env.NEXT_PUBLIC_LS_VARIANT_FIGMA || "123458"]: {
+    name: 'DevThemes Figma Design System',
+    description: 'The complete Figma design system used to build all DevThemes templates.',
+    downloadUrl: '#',
+  },
+  [process.env.NEXT_PUBLIC_LS_VARIANT_PORTFOLIO || "123459"]: {
     name: 'Minimalist Blog & Portfolio',
     description: 'Premium dark mode bento grid portfolio.',
+    downloadUrl: process.env.BLOB_URL_PORT || '#',
   },
 };
 

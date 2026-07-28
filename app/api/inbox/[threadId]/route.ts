@@ -4,16 +4,18 @@ import prisma from '@/lib/prisma';
 
 export async function GET(
   req: Request,
-  { params }: { params: { threadId: string } }
+  { params }: { params: Promise<{ threadId: string }> }
 ) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
+    const { threadId } = await params;
+
     const thread = await prisma.thread.findUnique({
-      where: { id: params.threadId },
+      where: { id: threadId },
       include: {
         messages: {
           orderBy: { createdAt: 'asc' }

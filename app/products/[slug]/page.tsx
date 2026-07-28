@@ -125,7 +125,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </ul>
 
               <div className="space-y-4">
-                <CheckoutButton productId={product.id} price={product.price} />
+                <CheckoutButton productId={product.variantId} price={product.price} />
                 
                 {product.demoUrl && (
                   <a href={product.demoUrl} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-xl bg-transparent border border-border/50 text-foreground font-bold tracking-wide hover:border-accent hover:text-accent transition-colors duration-300 flex items-center justify-center gap-2">
