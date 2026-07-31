@@ -13,31 +13,37 @@ const PRODUCT_FILES: Record<string, string> = {
 export async function GET(req: Request) {
   try {
     const { userId } = await auth();
-    if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
-    }
-
     const { searchParams } = new URL(req.url);
     const productId = searchParams.get('id');
 
-    if (!productId || !PRODUCT_FILES[productId]) {
+    if (!productId) {
       return new NextResponse('Invalid product ID', { status: 400 });
     }
 
-    // Verify ownership
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
-    const purchases = (user.publicMetadata.purchases as string[]) || [];
+    let purchases: string[] = [];
+    if (userId) {
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      purchases = (user.publicMetadata.purchases as string[]) || [];
+    } else {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
 
     if (!purchases.includes(productId)) {
       return new NextResponse('Forbidden: You do not own this product', { status: 403 });
     }
 
-    // Vercel Blob URLs - Replace these with your actual uploaded Blob URLs
+    const saasId = process.env.NEXT_PUBLIC_LS_VARIANT_SAAS || "123456";
+    const ecomId = process.env.NEXT_PUBLIC_LS_VARIANT_ECOM || "123457";
+    const portId = process.env.NEXT_PUBLIC_LS_VARIANT_PORTFOLIO || "123459";
+
     const PRODUCT_BLOBS: Record<string, string> = {
       'prod_001': process.env.BLOB_URL_SAAS || 'https://placeholder.blob.vercel-storage.com/saas.zip',
+      [saasId]: process.env.BLOB_URL_SAAS || 'https://placeholder.blob.vercel-storage.com/saas.zip',
       'prod_002': process.env.BLOB_URL_ECOM || 'https://placeholder.blob.vercel-storage.com/ecom.zip',
+      [ecomId]: process.env.BLOB_URL_ECOM || 'https://placeholder.blob.vercel-storage.com/ecom.zip',
       'prod_004': process.env.BLOB_URL_PORT || 'https://placeholder.blob.vercel-storage.com/port.zip',
+      [portId]: process.env.BLOB_URL_PORT || 'https://placeholder.blob.vercel-storage.com/port.zip',
     };
 
     const blobUrl = PRODUCT_BLOBS[productId];

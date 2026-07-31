@@ -27,15 +27,23 @@ const PRODUCT_CATALOG: Record<string, any> = {
 };
 
 export default async function DashboardPage() {
-  const { userId } = await auth();
-
-  if (!userId) {
+  const authObj = await auth();
+  const userId = authObj?.userId;
+  
+  let purchases: string[] = [];
+  
+  if (userId) {
+    try {
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      purchases = (user.publicMetadata.purchases as string[]) || [];
+    } catch (e) {
+      console.error("Clerk fetch error:", e);
+    }
+  } else {
     redirect('/sign-in');
   }
 
-  const client = await clerkClient();
-  const user = await client.users.getUser(userId);
-  const purchases = (user.publicMetadata.purchases as string[]) || [];
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-6">

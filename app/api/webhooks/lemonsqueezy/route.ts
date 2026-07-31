@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
+import prisma from '@/lib/prisma';
 
 export async function POST(req: Request) {
   try {
@@ -42,6 +43,43 @@ export async function POST(req: Request) {
             }
           });
           console.log(`Granted user ${userId} access to variant ${variantId}`);
+        }
+      }
+
+      // Record the order in Prisma for the Admin Dashboard
+      if (variantId) {
+        const product = await prisma.product.findUnique({
+          where: { lemonSqueezyVariantId: String(variantId) }
+        });
+
+        if (product) {
+          // Check if order already exists to avoid duplicates
+          const existingOrder = await prisma.order.findUnique({
+            where: { lemonSqueezyId: String(orderData.identifier) }
+          });
+
+          if (!existingOrder) {
+            await prisma.order.create({
+              data: {
+                lemonSqueezyId: String(orderData.identifier),
+                customerId: userId || orderData.user_email || 'guest',
+                customerEmail: orderData.user_email || null,
+                totalAmount: (orderData.total || 0) / 100, // Convert cents to dollars
+                discountApplied: (orderData.discount_total || 0) / 100,
+                status: 'PAID',
+                orderItems: {
+                  create: {
+                    productId: product.id,
+                    price: (orderData.first_order_item?.price || orderData.total || 0) / 100,
+                    quantity: orderData.first_order_item?.quantity || 1
+                  }
+                }
+              }
+            });
+            console.log(`Saved order ${orderData.identifier} to Prisma database`);
+          }
+        } else {
+          console.error(`Could not save order: Product with variant ID ${variantId} not found in database.`);
         }
       }
       

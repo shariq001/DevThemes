@@ -6,12 +6,14 @@ import { ThemeToggle } from "./ThemeToggle";
 import { DevThemesLogo } from "./DevThemesLogo";
 import { GetTemplatesButton } from "./GetTemplatesButton";
 import { motion, AnimatePresence } from "framer-motion";
-import { SignInButton, UserButton, useAuth } from "@clerk/nextjs";
+import { SignInButton, UserButton, useAuth, useUser } from "@clerk/nextjs";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isSignedIn, isLoaded } = useAuth();
+  const { user } = useUser();
+  const isAdmin = user?.publicMetadata?.role === "admin";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -109,6 +111,11 @@ export default function Navbar() {
                 </SignInButton>
               ) : (
                 <>
+                  {isAdmin && (
+                    <Link href="/admin" className="text-sm font-bold tracking-wide text-secondary hover:text-foreground transition-colors">
+                      Admin
+                    </Link>
+                  )}
                   <Link href="/dashboard" className="text-sm font-bold tracking-wide text-secondary hover:text-foreground transition-colors">
                     Dashboard
                   </Link>
@@ -176,13 +183,24 @@ export default function Navbar() {
                     </button>
                   </SignInButton>
                 ) : (
-                  <Link 
-                    href="/dashboard" 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-xl font-bold tracking-tighter text-foreground hover:text-accent transition-colors"
-                  >
-                    Dashboard
-                  </Link>
+                  <>
+                    {isAdmin && (
+                      <Link 
+                        href="/admin" 
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-xl font-bold tracking-tighter text-foreground hover:text-accent transition-colors"
+                      >
+                        Admin Dashboard
+                      </Link>
+                    )}
+                    <Link 
+                      href="/dashboard" 
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-xl font-bold tracking-tighter text-foreground hover:text-accent transition-colors"
+                    >
+                      Dashboard
+                    </Link>
+                  </>
                 )}
                 
                 <div onClick={() => setIsMobileMenuOpen(false)} className="mt-4">

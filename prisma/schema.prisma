@@ -28,3 +28,42 @@ model Message {
   content   String
   createdAt DateTime @default(now())
 }
+
+model Product {
+  id                    String      @id @default(cuid())
+  name                  String
+  description           String?
+  price                 Float
+  lemonSqueezyVariantId String?     @unique
+  status                String      @default("ACTIVE") // ACTIVE, DRAFT, HIDDEN
+  viewCount             Int         @default(0) // Custom analytics
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  
+  orderItems            OrderItem[]
+}
+
+model Order {
+  id                String      @id @default(cuid())
+  lemonSqueezyId    String      @unique
+  customerId        String      // Clerk User ID or email
+  customerEmail     String?
+  totalAmount       Float
+  discountApplied   Float       @default(0)
+  status            String      @default("PAID") // PENDING, PAID, REFUNDED
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  
+  orderItems        OrderItem[]
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  price       Float
+  quantity    Int      @default(1)
+  createdAt   DateTime @default(now())
+}
