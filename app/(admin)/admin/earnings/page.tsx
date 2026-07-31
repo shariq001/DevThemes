@@ -37,7 +37,7 @@ export default async function EarningsPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {productEarningsMap.map((item, index) => (
+            {productEarningsMap.map((item: any, index: number) => (
               <div key={index} className="flex items-center justify-between">
                 <span className="font-medium">{item.name}</span>
                 <span className="font-bold text-green-600">${item.revenue.toFixed(2)}</span>

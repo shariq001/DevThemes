@@ -32,7 +32,7 @@ export default async function ListingsPage() {
               </tr>
             </thead>
             <tbody>
-              {products.map(product => (
+              {products.map((product: any) => (
                 <tr key={product.id} className="border-b border-gray-100 dark:border-zinc-800 last:border-0">
                   <td className="px-6 py-4 font-medium">{product.title}</td>
                   <td className="px-6 py-4">${product.price.toFixed(2)}</td>

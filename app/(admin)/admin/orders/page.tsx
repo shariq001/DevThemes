@@ -37,12 +37,12 @@ export default async function OrdersPage() {
                 </td>
               </tr>
             ) : (
-              orders.map(order => (
+              orders.map((order: any) => (
                 <tr key={order.id} className="border-b border-gray-100 dark:border-zinc-800 last:border-0">
                   <td className="px-6 py-4 font-medium text-sm">
                     {order.lemonSqueezyId || order.id.slice(-8)}
                     <div className="text-xs text-gray-400 mt-1">
-                      {order.orderItems.map(item => item.product.name).join(', ')}
+                      {order.orderItems.map((item: any) => item.product.name).join(', ')}
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm">{order.customerEmail || order.customerId}</td>
