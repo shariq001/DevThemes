@@ -17,7 +17,7 @@ export default async function EarningsPage() {
   });
 
   const productEarningsMap = earningsByProduct.map((earning: any) => {
-    const product = products.find(p => p.id === earning.productId);
+    const product = products.find((p: any) => p.id === earning.productId);
     return {
       name: product?.name || "Unknown Product",
       revenue: earning._sum.price || 0
