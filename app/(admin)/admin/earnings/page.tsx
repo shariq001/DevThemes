@@ -12,17 +12,17 @@ export default async function EarningsPage() {
 
   const products = await prisma.product.findMany({
     where: {
-      id: { in: earningsByProduct.map(e => e.productId) }
+      id: { in: earningsByProduct.map((e: any) => e.productId) }
     }
   });
 
-  const productEarningsMap = earningsByProduct.map(earning => {
+  const productEarningsMap = earningsByProduct.map((earning: any) => {
     const product = products.find(p => p.id === earning.productId);
     return {
       name: product?.name || "Unknown Product",
       revenue: earning._sum.price || 0
     };
-  }).sort((a, b) => b.revenue - a.revenue);
+  }).sort((a: any, b: any) => b.revenue - a.revenue);
 
   return (
     <div>
